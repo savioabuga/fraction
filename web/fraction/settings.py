@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # third-party apps
+    "smartmin",
+    # fraction apps
+    "dashboard",
 ]
 
 MIDDLEWARE = [
@@ -54,7 +58,7 @@ ROOT_URLCONF = "fraction.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -122,3 +126,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# create the smartmin CRUDL permissions on all objects
+PERMISSIONS = {
+    "*": (
+        "create",  # can create an object
+        "read",  # can read an object, viewing it's details
+        "update",  # can update an object
+        "delete",  # can delete an object,
+        "list",
+    ),  # can view a list of the objects
+}
+
+# assigns the permissions that each group should have, here creating an Administrator group with
+# authority to create and change users
+GROUP_PERMISSIONS = {"Administrator": ("auth.user.*",)}
+
+LOGIN_URL = "/users/login"

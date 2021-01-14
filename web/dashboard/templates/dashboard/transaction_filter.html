@@ -1,0 +1,39 @@
+{% with filter_name='transaction_filter' filter_value=request.GET.contact_filter %}
+    <span style='font-weight:normal;font-size:15px;vertical-align:middle;'>Show:</span>
+    <select id='{{ filter_name }}' name='{{ filter_name }}' style='font-weight:normal;font-size:12px;'>
+        <option value='' {% if not filter_value %}selected{% endif %}>
+            All Contacts
+        </option>
+        <optgroup label='Payment Readiness:'>
+            <option value='ready' {% if filter_value and filter_value == 'ready' %}selected{% endif %}>
+                Can Receive Payments
+            </option>
+            <option value='not-ready' {% if filter_value and filter_value == 'not-ready' %}selected{% endif %}>
+                Cannot Receive Payments
+            </option>
+            <option value='bad-network' {% if filter_value and filter_value == 'bad-network' %}selected{% endif %}>
+                &raquo; Network Not Supported
+            </option>
+            <option value='unregistered' {% if filter_value and filter_value == 'unregistered' %}selected{% endif %}>
+                &raquo; Not m-Money Registered
+            </option>
+            <option value='bad-name' {% if filter_value and filter_value == 'bad-name' %}selected{% endif %}>
+                {% if view.organization.settings.name_match_affects_payment %}&raquo; {% endif %}Name Mismatch
+            </option>
+            {% comment "BPN-1236-turn-off-sms-checks-temporarily" %}
+                <option value='sms-fail' {% if filter_value and filter_value == 'sms-fail' %}selected{% endif %}>
+                    Cannot Receive SMS
+                </option>
+            {% endcomment %}
+            <option value='inactive' {% if filter_value and filter_value == 'inactive' %}selected{% endif %}>
+                Inactive
+            </option>
+        </optgroup>
+    </select>
+    <!-- <script type='text/javascript'>
+        $(document).ready(function() {
+            $("#{{ filter_name }}").select2({width:'resolve'});
+            $("#{{ filter_name }}").on("change", function(e){ document.location = URI(document.location).query({ {{ filter_name }}:e.val});});
+        });
+    </script> -->
+{% endwith %}

@@ -1,0 +1,54 @@
+{% extends "smartmin/list.html" %}
+{% block title %}{{ block.super }}  | Transaction {% endblock title %}
+{% block pageactions %}
+{% with filter_name='transaction_filter' filter_value=request.GET.transaction_filter %}
+    <span style='font-weight:normal;font-size:15px;vertical-align:middle;'>Show:</span>
+    <select id='transaction_filter' name='{{ filter_name }}' style='font-weight:normal;font-size:12px;'>
+        <option value='' {% if not filter_value %}selected{% endif %}>
+            All Transactions
+        </option>
+        <optgroup label='Department:'>
+            <option value='government' {% if filter_value and filter_value == 'government' %}selected{% endif %}>
+                Government
+            </option>
+            <option value='midmarkert' {% if filter_value and filter_value == 'midmarket' %}selected{% endif %}>
+                Midmarket
+            </option>
+            <option value='channel_partners' {% if filter_value and filter_value == 'channel_partners' %}selected{% endif %}>
+                Channel Partners
+            </option>
+            <option value='enterprice' {% if filter_value and filter_value == 'enterprice' %}selected{% endif %}>
+                Enterprice
+            </option>
+        </optgroup>
+        <optgroup label='Product:'>
+            <option value='carretera' {% if filter_value and filter_value == 'carretera' %}selected{% endif %}>
+                Carretera
+            </option>
+            <option value='paseo' {% if filter_value and filter_value == 'paseo' %}selected{% endif %}>
+                Paseo
+            </option>
+            <option value='velo' {% if filter_value and filter_value == 'velo' %}selected{% endif %}>
+                Velo
+            </option>
+            <option value='vtt' {% if filter_value and filter_value == 'vtt' %}selected{% endif %}>
+                VTT
+            </option>
+            <option value='montana' {% if filter_value and filter_value == 'montana' %}selected{% endif %}>
+                Montana
+            </option>
+            <option value='amarilla' {% if filter_value and filter_value == 'amarilla' %}selected{% endif %}>
+                Amarilla
+            </option>
+        </optgroup>
+    </select>
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $("#transaction_filter").select2({width:'resolve'});
+            $("#transaction_filter").on("change", function(e){ document.location = URI(document.location.href).search({"transaction_filter": e.target.value});});
+        });
+    </script>
+    <a href="{% url 'dashboard.transaction_csv' %}transaction_filter={{filter_value}}" class="btn btn-primary">Export</a>
+{% endwith %}
+{% endblock %}
+{% block page_title %} Transaction {% endblock %}
