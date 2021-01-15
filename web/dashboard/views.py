@@ -62,6 +62,8 @@ class TransactionCRUDL(SmartCRUDL):
         pass
 
     class Chart(SmartTemplateView):
+        title = "Transaction Charts"
+
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             sales_datapool = PivotDataPool(
