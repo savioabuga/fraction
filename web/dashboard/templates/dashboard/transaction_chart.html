@@ -1,0 +1,10 @@
+{% extends "smartmin/base.html" %}
+{% load smartmin i18n %}
+{% block chart %}
+    {% load chartit %}
+    {{ charts|load_charts:"sales_chart, profit_chart"}}
+{% endblock chart %}
+{% block content %}
+    <div id='sales_chart'>  </div> 
+    <div id='profit_chart'>  </div> 
+{% endblock content %}

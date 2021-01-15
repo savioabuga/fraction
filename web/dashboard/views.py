@@ -1,11 +1,15 @@
-from smartmin.views import SmartCRUDL, SmartListView, SmartCsvView
+from django.views import View
+from django.db.models import Sum
+from django.shortcuts import render
+from smartmin.views import SmartCRUDL, SmartListView, SmartCsvView, SmartView, SmartTemplateView
+from chartit import PivotDataPool, PivotChart
 from .models import Transaction
 
 
 class TransactionCRUDL(SmartCRUDL):
     permissions = False
     model = Transaction
-    actions = ("read", "update", "list", "csv")
+    actions = ("read", "update", "list", "csv", "chart")
 
     class List(SmartListView):
         fields = (
@@ -22,7 +26,7 @@ class TransactionCRUDL(SmartCRUDL):
             "sales",
             "cogs",
             "profit",
-            "date"
+            "date",
         )
 
         def get_department(self, obj):
@@ -33,7 +37,7 @@ class TransactionCRUDL(SmartCRUDL):
 
         def get_product(self, obj):
             return Transaction.ProductType.get_choice(obj.product).label
-        
+
         def get_discount_band(self, obj):
             try:
                 discount_band = Transaction.DiscoundBandType.get_choice(obj.discount_band).label
@@ -54,3 +58,58 @@ class TransactionCRUDL(SmartCRUDL):
 
     class Csv(SmartCsvView, List):
         pass
+
+    class Chart(SmartTemplateView):
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            sales_datapool = PivotDataPool(
+                series=[
+                    {
+                        "options": {
+                            "source": Transaction.objects.all(),
+                            "categories": ["product"],
+                            "legend_by": "country",
+                            "top_n_per_cat": 3,
+                        },
+                        "terms": {"sales": Sum("sales")},
+                    }
+                ]
+            )
+
+            sales_chart = PivotChart(
+                datasource=sales_datapool,
+                series_options=[{"options": {"type": "column", "stacking": True}, "terms": ["sales"]}],
+                chart_options={
+                    "title": {"text": "Sales by product in top 3 countries"},
+                    "xAxis": {"title": {"text": "Product"}},
+                },
+            )
+
+            profits_datapool = PivotDataPool(
+                series=[
+                    {
+                        "options": {
+                            "source": Transaction.objects.all(),
+                            "categories": ["month_number"],
+                            "legend_by": "product",
+                            "top_n_per_cat": 5,
+                        },
+                        "terms": {"profit": Sum("profit")},
+                    }
+                    
+                ],
+                sortf_mapf_mts = (lambda *x: (1*x), None, None)
+            )
+
+            profit_chart = PivotChart(
+                datasource=profits_datapool,
+                series_options=[{"options": {"type": "column", "stacking": False}, "terms": ["profit"]}],
+                chart_options={
+                    "title": {"text": "Profit by Month in top 3 products"},
+                    "xAxis": {"title": {"text": "Month"}},
+                },
+            )
+
+            context["charts"] = [sales_chart, profit_chart]
+
+            return context

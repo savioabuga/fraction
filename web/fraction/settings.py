@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # third-party apps
     "smartmin",
+    "chartit",
     # fraction apps
     "dashboard",
 ]

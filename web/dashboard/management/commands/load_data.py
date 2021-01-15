@@ -29,6 +29,9 @@ class Command(BaseCommand):
                 cogs = self.currency_to_numeric(row["cogs"].replace("-", "0"))
                 profit = self.currency_to_numeric(row["profit"].replace("-", "0"))
                 date = datetime.strptime(row["date"], "%m/%d/%Y")
+                month_number = int(row["month_number"])
+                month_name = row["month_name"].strip()
+                year = int(row["year"])
                 Transaction.objects.create(
                     department=department.value,
                     country=country.value,
@@ -43,6 +46,9 @@ class Command(BaseCommand):
                     cogs=cogs,
                     profit=profit,
                     date=date,
+                    month_number=month_number,
+                    month_name=month_name,
+                    year=year
                 )
 
     def currency_to_numeric(self, money):

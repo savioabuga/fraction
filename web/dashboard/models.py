@@ -42,3 +42,6 @@ class Transaction(models.Model):
     cogs = models.DecimalField(max_digits=20, decimal_places=2)
     profit = models.DecimalField(max_digits=20, decimal_places=2)
     date = models.DateField()
+    month_number = models.IntegerField()
+    month_name = models.CharField(max_length=20)
+    year = models.IntegerField()
