@@ -24,7 +24,7 @@
   <link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
   <link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}">
   <link type="text/css" rel="stylesheet" href="{% static 'css/smartmin_styles.css' %}">
-  <link type="text/css" rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link type="text/css" rel="stylesheet" href="{% static 'css/custom.css' %}">
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.6.3/URI.min.js"></script>
@@ -44,7 +44,7 @@
 <body>
 
   {% block navbar %}
-  <header class="navbar navbar-static-top" role="banner">
+  <header class="navbar navbar-static-top navbar-inverse" role="banner">
     <div class="container">
 
       <div class="navbar-header">
@@ -63,6 +63,8 @@
       {% block navigation %}
       <nav class="collapse navbar-collapse" id="smartmin-navbar-collapse" role="navigation">
 	<ul class="nav navbar-nav">
+    <li><a href="{% url 'dashboard.transaction_chart' %}">Charts</a></li>
+    <li><a href="{% url 'dashboard.transaction_list' %}">Transactions</a></li>
 	  {% if perms.nsms.text_list %}
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b class="caret"></b></a>

@@ -1,10 +1,12 @@
 from django.views import View
 from django.db.models import Sum
-from django.shortcuts import render
-from smartmin.views import SmartCRUDL, SmartListView, SmartCsvView, SmartView, SmartTemplateView
+from django.shortcuts import redirect
+from smartmin.views import SmartCRUDL, SmartListView, SmartCsvView, SmartTemplateView
 from chartit import PivotDataPool, PivotChart
 from .models import Transaction
 
+def home(request):
+    return redirect("dashboard.transaction_list")
 
 class TransactionCRUDL(SmartCRUDL):
     permissions = False
@@ -105,7 +107,7 @@ class TransactionCRUDL(SmartCRUDL):
                 datasource=profits_datapool,
                 series_options=[{"options": {"type": "column", "stacking": False}, "terms": ["profit"]}],
                 chart_options={
-                    "title": {"text": "Profit by Month in top 3 products"},
+                    "title": {"text": "Profit by Month"},
                     "xAxis": {"title": {"text": "Month"}},
                 },
             )
